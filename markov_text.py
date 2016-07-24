@@ -6,8 +6,9 @@ def build_model():
 
 	with open('w5.txt') as infile:
 		for line in infile:
-			count, word1, word2, word3, word4, word5 = line.split()
-			model[(word1, word2, word3, word4)].append((word5, int(count)))
+			parts = line.split()
+			count, key, word = int(parts[0]), tuple(parts[1:-1]), parts[-1]
+			model[key].append((word, count))
 
 	return model
 
