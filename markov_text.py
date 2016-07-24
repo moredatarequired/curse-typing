@@ -1,16 +1,6 @@
-from collections import defaultdict
 import random
 
-def build_model():
-	model = defaultdict(list)
-
-	with open('w5.txt') as infile:
-		for line in infile:
-			parts = line.split()
-			count, key, word = int(parts[0]), tuple(parts[1:-1]), parts[-1]
-			model[key].append((word, count))
-
-	return model
+import text_model
 
 def random_word(words, model):
 	key = tuple(words[-4:])
@@ -26,7 +16,7 @@ def random_word(words, model):
 	assert(False)
 
 def random_sentence(model, length=10):
-	words = list(random.choice(list(model.keys())))
+	words = list(random.choice(model.seeds))
 	while len(words) < length:
 		next = random_word(words, model)
 		if next is None:
@@ -34,6 +24,6 @@ def random_sentence(model, length=10):
 		words.append(next)
 	return ' '.join(words)
 
-model = build_model()
+model = text_model.english_model()
 for i in range(10):
 	print(random_sentence(model))
