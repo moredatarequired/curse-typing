@@ -1,4 +1,6 @@
 from collections import defaultdict
+import os.path
+import pickle
 
 ENGLISH_NGRAM_FILES = ['w5.txt', 'w4.txt', 'w3.txt', 'w2.txt']
 
@@ -15,9 +17,18 @@ def _build_model():
 				count, key, word = int(parts[0]), tuple(parts[1:-1]), parts[-1]
 				model[key].append((word, count))
 	
-	model.seeds = list(model.keys())
+	model[0] = list(model.keys())
+	model.seeds = model[0]
 
 	return model
 
 def english_model():
-	return _build_model()
+	if os.path.isfile('.english_model.p'):
+		with open('.english_model.p', 'rb') as pickle_file:
+			model = pickle.load(pickle_file)
+			model.seeds = model[0]
+			return model
+	model = _build_model()
+	with open('.english_model.p', 'wb') as pickle_file:
+		pickle.dump(model, pickle_file)
+	return model
