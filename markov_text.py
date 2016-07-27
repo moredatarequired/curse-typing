@@ -26,6 +26,5 @@ def random_sentence(model, length=60):
 		words.append(next)
 	return ' '.join(words[:-1])
 
-model = text_model.english_model()
-for i in range(10):
-	print(random_sentence(model))
+def english_nonsense():
+	return random_sentence(text_model.english_model(), 80)

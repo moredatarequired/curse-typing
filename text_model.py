@@ -22,7 +22,11 @@ def _build_model():
 
 	return model
 
+model = None
 def english_model():
+	global model
+	if model:
+		return model
 	if os.path.isfile('.english_model.p'):
 		with open('.english_model.p', 'rb') as pickle_file:
 			model = pickle.load(pickle_file)
