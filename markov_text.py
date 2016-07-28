@@ -22,7 +22,7 @@ def random_sentence(model, length=60):
 	while sum(len(w) for w in words) < length:
 		next = random_word(words, model)
 		if next is None:
-			break
+			return random_sentence(model, length)
 		words.append(next)
 	return ' '.join(words[:-1])
 

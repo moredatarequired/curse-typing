@@ -7,14 +7,25 @@ ENGLISH_NGRAM_FILES = ['w5.txt', 'w4.txt', 'w3.txt', 'w2.txt']
 class TextModel(defaultdict):
 	pass
 
+def _ngram_line(line):
+	'Get the count, prefix and final word of an ngram line.'
+	parts = line.split()
+	if parts[1] == "n't":
+		parts[1:] = parts[2:]
+	for i in range(2, len(parts)-1):
+		if parts[i+1] == "n't":
+			parts[i] = parts[i] + parts[i+1]
+			parts[i+1:] = parts[i+2:]
+			break
+	return int(parts[0]), tuple(parts[1:-1]), parts[-1]
+
 def _build_model():
 	model = TextModel(list)
 
 	for ngram_file in ENGLISH_NGRAM_FILES:
 		with open(ngram_file) as infile:
 			for line in infile:
-				parts = line.split()
-				count, key, word = int(parts[0]), tuple(parts[1:-1]), parts[-1]
+				count, key, word = _ngram_line(line)
 				model[key].append((word, count))
 	
 	model[0] = list(model.keys())
