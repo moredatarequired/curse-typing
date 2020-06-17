@@ -46,6 +46,22 @@ def cpm(keystrokes):
     return int(60 * (phraselen - 1) / duration) if duration else None
 
 
+def mistakes(keystrokes):
+    """Get the number of streaks of wrong keys."""
+    streak = False
+    wrong = 0
+    for c, a, _ in keystrokes:
+        if streak:
+            if c == a:
+                streak = False
+            continue
+        if c != a:
+            streak = True
+            wrong += 1
+
+    return wrong
+
+
 def practice_sentence(stdscr, sentence):
     sentence = "".join(c for c in sentence.strip() if c in printable)
     y, x = curses.getsyx()
@@ -74,9 +90,8 @@ def practice_sentence(stdscr, sentence):
                 done = True
         stdscr.refresh()
 
-    mistakes = len(keystrokes) - len(sentence)
     stdscr.move(y, 80)
-    stdscr.addstr(f"  # wrong: {mistakes}; speed: {cpm(keystrokes)} cpm\n")
+    stdscr.addstr(f"  # wrong: {mistakes(keystrokes)}; speed: {cpm(keystrokes)} cpm\n")
 
     y, x = curses.getsyx()
     stdscr.move(y + 1, 0)
