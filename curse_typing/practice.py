@@ -2,8 +2,11 @@ from string import printable
 import curses
 from curses import wrapper
 import time
+from collections import namedtuple
 
 from reader import sentence_generator
+
+Keystroke = namedtuple("Keystroke", "intended actual timestamp")
 
 
 def practice(stdscr):
@@ -28,7 +31,7 @@ def practice_sentence(stdscr, sentence):
         if start is None:
             start = time.perf_counter()
         t = time.perf_counter() - start
-        keystrokes.append((c, t))
+        keystrokes.append(Keystroke(sentence[i], c, t))
 
         if c == sentence[i]:
             i += 1
@@ -37,7 +40,7 @@ def practice_sentence(stdscr, sentence):
                 done = True
         stdscr.refresh()
 
-    avg = keystrokes[-1][1] / len(sentence)
+    avg = keystrokes[-1].timestamp / len(sentence)
     mistakes = len(keystrokes) - len(sentence)
     stdscr.move(y, 80)
     stdscr.addstr(f"  # wrong: {mistakes}; speed: {avg}\n")
